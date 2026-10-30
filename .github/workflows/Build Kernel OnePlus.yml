@@ -1200,6 +1200,19 @@ jobs:
             fi
           done
 
+      - name: Fix mkcompile_h UTS_LEN overflow bug
+        run: |
+          cd kernel_workspace/kernel_platform
+          for f in ./common/scripts/mkcompile_h ./"$KERNEL_REPOS"/scripts/mkcompile_h; do
+            if [ -f "$f" ]; then
+              echo "Patching $f : change UTS_LEN=64 → UTS_LEN=128"
+              sed -i 's/^UTS_LEN=64/UTS_LEN=128/' "$f"
+              grep UTS_LEN "$f"
+            fi
+          done
+          rm -rf ./common/out/include/generated || true
+          echo "✅ mkcompile_h overflow fix done, cleared old generated header cache"
+
       - name: Disable GPUEB
         if: ${{ env.KERNEL_VERSION == '5.10' && startsWith(env.CPU, 'mt') }}
         run: |
