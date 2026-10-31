@@ -1206,8 +1206,8 @@ jobs:
           for f in ./common/scripts/mkcompile_h ./"$KERNEL_REPOS"/scripts/mkcompile_h; do
             if [ -f "$f" ]; then
               echo "Patching $f : change UTS_LEN=64 → UTS_LEN=128"
-              sed -i 's/^UTS_LEN=64/UTS_LEN=128/' "$f"
-              grep UTS_LEN "$f"
+              sed -i 's/^[[:space:]]*UTS_LEN=64/UTS_LEN=128/' "$f"
+              grep UTS_LEN "$f" || true
             fi
           done
           rm -rf ./common/out/include/generated || true
